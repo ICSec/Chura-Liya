@@ -67,7 +67,7 @@ def sniffProbe(p):
 						msg=""
 						msglen=0
 					else:
-						msg+=p.info[lenpos+1:]
+						msg+=p.info[lenpos:]
 				else:
 					unenc=aes.decrypt(p.info)
 					try:
@@ -79,7 +79,7 @@ def sniffProbe(p):
 def SendRates(rates):
 	frame = RadioTap()/Dot11(addr1="ff:ff:ff:ff:ff:ff",addr2="11:22:33:44:55:66",addr3=RandMAC())/Dot11Beacon(cap="ESS")/Dot11Elt(ID="SSID",len=len(ssid),info=ssid)/Dot11Elt(ID="Rates",info=rates)/Dot11Elt(ID="DSset",info="\x03")/Dot11Elt(ID="TIM",info="\x00\x01\x00\x00")
 	sendp(frame, verbose=verbose)
-	sniff(iface=interface, stop_filter=sniffProbe)
+	sniff(iface=interface, stop_filter=sniffProbe, store=0)
 
 cmd = ""
 while cmd != "exit":
