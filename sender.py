@@ -1,6 +1,5 @@
 #!/usr/bin/python2.7
 
-# python sender.py mon1
 import zlib
 from Crypto.Cipher import AES
 from Crypto import Random
@@ -9,6 +8,14 @@ import base64
 import sys,hashlib
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 from scapy.all import *
+import argparse
+
+## Launcher options
+parser = argparse.ArgumentParser(description='Chura-Liya Sender', prog='sender.py', usage='%(prog)s <Monitor Mode WiFi NIC> <Desired Password>')
+parser.add_argument('Interface', type=str, help='WiFi NIC')
+parser.add_argument('Password', type=str, help='Desired Password')
+
+args = parser.parse_args()
 
 BS = 16
 pad = lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS) 
@@ -30,10 +37,10 @@ class AESCipher:
         cipher = AES.new(self.key, AES.MODE_CBC, iv )
         return unpad(cipher.decrypt( enc[16:] ))
 
-
-interface=sys.argv[1] #mon1
+interface=args.Interface
+password=args.Password
 verbose=0
-aes=AESCipher("password") #change this password to match receiver.py
+aes=AESCipher(password)
 
 conf.verbose=verbose
 conf.iface=interface
