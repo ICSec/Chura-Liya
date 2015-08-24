@@ -12,6 +12,14 @@ import base64
 import sys
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 from scapy.all import * 
+import argparse
+import hashlib
+
+## Launcher options
+parser = argparse.ArgumentParser(description='Chura-Liya Sender', prog='sender.py', usage='%(prog)s <Monitor Mode WiFi NIC> <Desired Password>')
+parser.add_argument('Interface', type=str, help='WiFi NIC')
+parser.add_argument('Password', type=str, help='Desired Password')
+args = parser.parse_args()
 
 BS = 16
 pad = lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS) 
@@ -33,9 +41,9 @@ class AESCipher:
         cipher = AES.new(self.key, AES.MODE_CBC, iv )
         return unpad(cipher.decrypt( enc[16:] ))
 
-aes=AESCipher("password") #change this password when deploying
-interface=sys.argv[1] #mon0
-
+interface=args.Interface
+password=args.Password
+aes=AESCipher(password)
 conf.iface=interface
 
 def executeHere(cmd):
