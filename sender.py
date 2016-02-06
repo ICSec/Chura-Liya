@@ -1,8 +1,7 @@
 #!/usr/bin/python
 
-import zlib
+import zlib,os
 from Crypto.Cipher import AES
-from Crypto import Random
 import logging
 import base64
 import sys,hashlib
@@ -27,7 +26,7 @@ class AESCipher:
 
     def encrypt( self, raw ):
         raw = pad(raw)
-        iv = Random.new().read( AES.block_size )
+        iv = os.urandom(AES.block_size)
         cipher = AES.new( self.key, AES.MODE_CBC, iv )
         return base64.b64encode( iv + cipher.encrypt( raw ) ) 
 
