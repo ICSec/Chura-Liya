@@ -1,10 +1,9 @@
 #!/usr/bin/python
 
 # python receiver.py mon0
-import zlib
+import zlib,os
 import base64
 from Crypto.Cipher import AES
-from Crypto import Random
 import subprocess
 import logging
 import time
@@ -31,7 +30,7 @@ class AESCipher:
 
     def encrypt( self, raw ):
         raw = pad(raw)
-        iv = Random.new().read( AES.block_size )
+        iv = os.urandom(AES.block_size)
         cipher = AES.new( self.key, AES.MODE_CBC, iv )
         return base64.b64encode( iv + cipher.encrypt( raw ) ) 
 
